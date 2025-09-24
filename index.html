@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library Management UI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e3a8a;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 20px auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      flex: 1;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button.add {
+      background: #16a34a;
+      color: white;
+    }
+
+    button.add:hover { background: #15803d; }
+
+    button.remove {
+      background: #ef4444;
+      color: white;
+    }
+
+    button.remove:hover { background: #b91c1c; }
+
+    .search {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #3b82f6;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f9fafb;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Library Management</h1>
+
+  <div class="card">
+    <div class="row">
+      <input type="text" id="bookTitle" placeholder="Enter book title" />
+      <input type="text" id="bookAuthor" placeholder="Enter author name" />
+      <button class="add" onclick="addBook()">Add Book</button>
+    </div>
+    <input type="text" id="searchBox" class="search" placeholder="🔍 Search book..." onkeyup="searchBook()" />
+
+    <table id="bookTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Book Title</th>
+          <th>Author</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let books = [];
+
+    function addBook() {
+      const title = document.getElementById("bookTitle").value.trim();
+      const author = document.getElementById("bookAuthor").value.trim();
+
+      if (title && author) {
+        books.push({ title, author });
+        renderBooks();
+        document.getElementById("bookTitle").value = "";
+        document.getElementById("bookAuthor").value = "";
+      } else {
+        alert("Please enter both Title and Author!");
+      }
+    }
+
+    function removeBook(index) {
+      books.splice(index, 1);
+      renderBooks();
+    }
+
+    function searchBook() {
+      const query = document.getElementById("searchBox").value.toLowerCase();
+      const filtered = books.filter(b => 
+        b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query)
+      );
+      renderBooks(filtered);
+    }
+
+    function renderBooks(list = books) {
+      const tbody = document.querySelector("#bookTable tbody");
+      tbody.innerHTML = "";
+      list.forEach((book, i) => {
+        const row = `<tr>
+          <td>${i + 1}</td>
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td><button class="remove" onclick="removeBook(${i})">Remove</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+  </script>
+</body>
+</html>
